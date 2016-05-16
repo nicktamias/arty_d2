@@ -4,7 +4,12 @@ disp('Opening the RS232 port . . . . . ');
 s_port = serial('COM13', 'BaudRate', 9600, 'Parity', 'none');
 set(s_port, 'InputBufferSize', 1);
 set(s_port, 'OutputBufferSize', 1);
+
+%set(s_port,'RecordDetail', 'verbose');
+%set(s_port,'RecordName', 'record_s1.txt');
+
 fopen(s_port);
+%record(s_port);
 
 disp('RS232 port activated!');
 
@@ -15,6 +20,8 @@ k = 1;
 s_out = zeros(1, Nc);
 time_intervals = zeros(1, Nc);
 
+pause_t=0.3;
+
 %Plot characters received and time intervals
 figure;
 
@@ -23,6 +30,7 @@ tic;
 while(1)
     
     if(s_port.BytesAvailable > 0)
+
         %Read one character from serial
         s_out(k) = fread(s_port, 1, 'uchar');
         
@@ -38,7 +46,8 @@ while(1)
 
         %Time intervals plot
         subplot(2,1,2);
-        hist(time_intervals(1:k))
+        time_temp=round(round(time_intervals,1)/pause_t);
+        hist(time_temp(2:k))
         title('Time Intervals')
         xlabel('Time')
         ylabel('Time Interval')

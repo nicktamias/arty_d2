@@ -23,6 +23,6 @@ slprj/
 ## 				Xilinx SDK				 
 ##													 
 ##---------------------------------------------------
-lab_exercises\arty_exer\
-!*.c
-!*.h
+lab_exercises/arty_exer/** 
+!lab_exercises/arty_exer/**/*.c
+!lab_exercises/arty_exer/**/*.h

@@ -24,25 +24,5 @@ slprj/
 ##													 
 ##---------------------------------------------------
 lab_exercises\arty_exer\
-
-!.project
-!.cproject
-
-##Hardware Platform Project
-!*.hwh
-!*.tcl
-!*.bit
-!*.mmi
-!*.xml
-!*.hdf
-
-##Application Project
 !*.c
 !*.h
-!*.ld
-
-##BSP Project
-!*.a
-!.sdkproject
-!Makefile
-!*.mss

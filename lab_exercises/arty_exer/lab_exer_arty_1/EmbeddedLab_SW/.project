@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>EmbeddedLab_SW</name>
-	<comment></comment>
+	<comment>Created by SDK v2014.4. EmbeddedLab_SW_bsp - microblaze_0</comment>
 	<projects>
 		<project>EmbeddedLab_SW_bsp</project>
 	</projects>

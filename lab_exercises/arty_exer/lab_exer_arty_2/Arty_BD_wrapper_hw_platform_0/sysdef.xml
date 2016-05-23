@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Project Version="1" Minor="0">
+	<BUILD_NUMBER Name="1071353"/>
+	<FULL_BUILD Name="SW Build 1071353 on Tue Nov 18 18:24:04 MST 2014"/>
+	<MODE Name="Post-Bitstream"/>
+	<SYSTEMINFO BOARD="" ARCH="artix7" PACKAGE="csg324" DEVICE="7a35t" SPEED="-1" LUT="" FF="" BRAM="" DSP=""/>
+	<HIERARCHY Name="Arty_BD_i"/>
+	<File Type="HW_HANDOFF" Name="Arty_BD.hwh" ModTime="1450084728"/>
+	<File Type="BIT" Name="Arty_BD_wrapper.bit" ModTime="1450088710"/>
+	<File Type="BMM" Name="Arty_BD_wrapper.mmi" ModTime="1450088683"/>
+	<File Type="BD_TCL" Name="Arty_BD_bd.tcl" ModTime="1450084728"/>
+	<USEDRESOURCES LUT="" FF="" BRAM="" DSP=""/>
+</Project>
+

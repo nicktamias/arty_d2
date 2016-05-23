@@ -75,15 +75,6 @@ void Timer_Init(XTmrCtr *TmrCtrInstancePtr, u8 TmrCtrNumber, u16 DeviceId)
 ******************************************************************************/
 void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 {
-	static int state;
-	static int upc = 0;
-	static int cnt = 0;
-	static int range = 255;
-	static int time_vals[Nc] = {0};
-	static u8 char_vals[Nc] = {0};
-	static int qs[3] = {16, 40, 66};
-	int val;
-
 	/* LED Blink */
 	int *LED = (int *)XPAR_GPIO_0_BASEADDR;
 	static int led_value = 1;
@@ -92,61 +83,4 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 
 	*LED = led_value;
 
-	/* Character generator */
-	upc++;
-
-	switch(state) {
-		case 0:
-				cnt++;
-				//xil_printf("%d\r\n", cnt);
-				char_vals[cnt] = (u8) (rand() % (range + 1));
-
-				xil_printf("%d\r\n", char_vals[cnt]);
-
-				time_vals[cnt] = upc;
-
-				if (cnt!=Nc){
-					state = 1;
-				}
-				else{
-					xil_printf("END\r\n");
-					XTmrCtr_Stop((XTmrCtr *)CallBackRef, TmrCtrNumber);
-				}
-				break;
-		case 1:
-				val = rand() % 100;
-				if (val>qs[0]){
-					state = 2;
-				}
-				else{
-					state = 0;
-				}
-				break;
-		case 2:
-				val = rand() % 100;
-				if (val>qs[1]){
-					state = 3;
-				}
-				else{
-					state = 0;
-				}
-				break;
-		case 3:
-				state = 4;
-				break;
-		case 4:
-				val = rand() % 100;
-				if (val>qs[2]){
-					state = 5;
-				}
-				else{
-					state = 0;
-				}
-				break;
-		case 5:
-				state = 0;
-				break;
-		default:
-				state = 0;
-	}
 }

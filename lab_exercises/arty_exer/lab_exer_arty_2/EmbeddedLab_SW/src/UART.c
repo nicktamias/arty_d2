@@ -7,6 +7,8 @@
 #include "UART.h"
 #include "Interrupts.h"
 
+#define Nc 10
+#define buf_size 8
 
 int UART_Init(XUartLite *UART_Inst_Ptr_1, u16 Uart_1_Dev_ID,  XUartLite *UART_Inst_Ptr_2, u16 Uart_2_Dev_ID)
 {
@@ -98,12 +100,33 @@ void SendHandler_UART_1(void *CallBackRef, unsigned int EventData)
 void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 {
 	unsigned int num_of_chars;
+	unsigned int i;
+	static int cnt = 0, Wp = 1, Rp = 1;
+	static int c_buf[buf_size] = {0};
+
 
 	num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_1, RxBuffer_1, BUF_SIZE);
-
-	while(XUartLite_IsSending(&UART_Inst_Ptr_1));
-	XUartLite_Send(&UART_Inst_Ptr_1, RxBuffer_1, num_of_chars);
 	if(UART_DBG) xil_printf("UART1: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_1);
+
+	//while(XUartLite_IsSending(&UART_Inst_Ptr_1));
+	//XUartLite_Send(&UART_Inst_Ptr_1, RxBuffer_1, num_of_chars);
+
+	/* Transmit User FSM */
+
+	/* Cyclic buffer not full */
+	if(Wp != ((Rp-1) % buf_size)) {
+		c_buf[Wp] = *RxBuffer_1;
+		Wp = (Wp + 1) % buf_size;
+	}
+
+	cnt++;
+
+	for(i=0; i<buf_size; i++) {
+		xil_printf("%02X ", c_buf[i]);
+	}
+	xil_printf("\r\n");
+
+	if(UART_DBG) xil_printf("cnt = %d\r\n", cnt);
 }
 
 /*****************************************************************************/

@@ -6,7 +6,7 @@ clear all;
 addpath(genpath('support_fn'))
 
 Ts = 1;
-Nc = 100;
+Nc = 10;
 
 Nstart = 0;
 Nend = 255;
@@ -17,8 +17,8 @@ qs=[1/6 2/5 2/3];
 time_vals = zeros(1, Nc);
 Tx_array = zeros(1,Nc);
 
-serial_name = 'COM4';
+serial_name = 'COM5';
 baud_rate = 9600;
 
-input_buf_size = 128;
-output_buf_size = 128;
+input_buf_size = 1;
+output_buf_size = 1;

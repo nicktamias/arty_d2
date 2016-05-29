@@ -12,8 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define Nc 10
-
 void Timer_Init(XTmrCtr *TmrCtrInstancePtr, u8 TmrCtrNumber, u16 DeviceId)
 {
 
@@ -78,9 +76,16 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	/* LED Blink */
 	int *LED = (int *)XPAR_GPIO_0_BASEADDR;
 	static int led_value = 1;
-
 	led_value ^= 1;
-
 	*LED = led_value;
 
+	/* Receive User FSM */
+
+	/* Cyclic buffer not empty */
+	if(Wp != Rp) {
+		xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
+		TxBuffer_1[0] = c_buf[Rp];
+		XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
+		Rp = (Rp + 1) % CBUF_SIZE;
+	}
 }

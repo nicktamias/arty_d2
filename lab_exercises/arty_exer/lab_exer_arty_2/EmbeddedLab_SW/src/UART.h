@@ -61,4 +61,11 @@ u8 TxBuffer_2[BUF_SIZE];
 XUartLite UART_Inst_Ptr_1;            /* The instance of the UartLite Device */
 XUartLite UART_Inst_Ptr_2;            /* The instance of the UartLite Device */
 
+/************************** Cyclic Buffer Declarations *****************************/
+#define CBUF_SIZE							8
+#define Nc 									10
+
+extern int Wp, Rp;
+extern int c_buf[CBUF_SIZE];
+
 #endif /* UART_H_ */

@@ -117,6 +117,7 @@ void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 	if(Wp != ((Rp-1) % CBUF_SIZE)) {
 		c_buf[Wp] = *RxBuffer_1;
 		Wp = (Wp + 1) % CBUF_SIZE;
+
 	}
 
 	cnt++;

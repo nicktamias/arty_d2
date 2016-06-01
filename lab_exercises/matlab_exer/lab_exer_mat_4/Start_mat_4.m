@@ -1,7 +1,7 @@
 disp('Opening the RS232 port . . . . . ');
 
 %Set serial port properties
-s1 = serial(serial_name, 'BaudRate', baud_rate, 'Parity', 'none');
+s1 = serial(serial_name, 'BaudRate', baud_rate, 'Parity', 'none', 'FlowControl', 'none');
 set(s1, 'InputBufferSize', input_buf_size);
 set(s1, 'OutputBufferSize', output_buf_size);
 fopen(s1);

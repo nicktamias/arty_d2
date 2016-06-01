@@ -63,11 +63,8 @@ int main()
 
     init_platform();
 
-    //xil_printf("Application Started\n\r");
-
     /* UART1: Clear to Send -> OFF (Negative Logic) */
 	*rts_1 = 0x01;
-
 
     /* Initialize Timer 0 */
     Timer_Init(&TimerCounterInst_0, TIMER_CNTR_0, XPAR_TMRCTR_0_DEVICE_ID);

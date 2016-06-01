@@ -80,12 +80,24 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	*LED = led_value;
 
 	/* Receive User FSM */
+	unsigned char *cts_1 = (unsigned char*) UART1_CTS_ADDR;
+	unsigned char *rts_1 = (unsigned char*) UART1_RTS_ADDR;
 
 	/* Cyclic buffer not empty */
-	if(Wp != Rp) {
-		xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
-		TxBuffer_1[0] = c_buf[Rp];
-		XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
-		Rp = (Rp + 1) % CBUF_SIZE;
+	if(*cts_1 == 0x00) {
+		if(Wp != Rp) {
+			xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
+			TxBuffer_1[0] = c_buf[Rp];
+			XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
+			Rp = (Rp + 1) % CBUF_SIZE;
+		}
+	}
+
+	/* Transmit User FSM */
+	if(Wp == ((Rp-1) % CBUF_SIZE)) {
+		*rts_1 = 0x01; //RTS OFF
+	}
+	else {
+		*rts_1 = 0x00; //RTS ON
 	}
 }

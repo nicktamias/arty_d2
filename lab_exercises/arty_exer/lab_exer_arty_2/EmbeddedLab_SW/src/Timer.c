@@ -73,6 +73,7 @@ void Timer_Init(XTmrCtr *TmrCtrInstancePtr, u8 TmrCtrNumber, u16 DeviceId)
 ******************************************************************************/
 void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 {
+
 	/* LED Blink */
 	int *LED = (int *)XPAR_GPIO_0_BASEADDR;
 	static int led_value = 1;
@@ -86,14 +87,19 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	/* Cyclic buffer not empty */
 	if(*cts_1 == 0x00) {
 		if(Wp != Rp) {
-			xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
 			TxBuffer_1[0] = c_buf[Rp];
 			XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
 			Rp = (Rp + 1) % CBUF_SIZE;
 		}
+		xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
 	}
 
 	/* Transmit User FSM */
+
+	/* Buffer is full when Wp = Rp-1 mod CBUF_SIZE
+	 * but due to greater speed on the PC side we check
+	 * if the buffer is almost full and stop the transmission then.
+	 */
 	if(Wp == ((Rp-1) % CBUF_SIZE)) {
 		*rts_1 = 0x01; //RTS OFF
 	}

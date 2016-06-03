@@ -100,13 +100,11 @@ void SendHandler_UART_1(void *CallBackRef, unsigned int EventData)
 ****************************************************************************/
 void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 {
+
 	unsigned int num_of_chars;
 	unsigned int i;
 
 	static int cnt = 0;
-
-	num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_1, RxBuffer_1, BUF_SIZE);
-	if(UART_DBG) xil_printf("UART1: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_1);
 
 	//while(XUartLite_IsSending(&UART_Inst_Ptr_1));
 	//XUartLite_Send(&UART_Inst_Ptr_1, RxBuffer_1, num_of_chars);
@@ -115,12 +113,12 @@ void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 
 	/* Cyclic buffer not full */
 	if(Wp != ((Rp-1) % CBUF_SIZE)) {
+		num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_1, RxBuffer_1, BUF_SIZE);
+		if(UART_DBG) xil_printf("UART1: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_1);
 		c_buf[Wp] = *RxBuffer_1;
 		Wp = (Wp + 1) % CBUF_SIZE;
-
+		cnt++;
 	}
-
-	cnt++;
 
 	for(i=0; i<CBUF_SIZE; i++) {
 		xil_printf("%02X ", c_buf[i]);

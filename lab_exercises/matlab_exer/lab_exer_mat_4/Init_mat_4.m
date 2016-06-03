@@ -22,3 +22,5 @@ baud_rate = 9600;
 
 input_buf_size = 1;
 output_buf_size = 1;
+
+pause_t = 0.1;

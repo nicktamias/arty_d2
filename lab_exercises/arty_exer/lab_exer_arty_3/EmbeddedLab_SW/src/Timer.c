@@ -86,21 +86,18 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 
 	/* Cyclic buffer not empty */
 	if(*cts_1 == 0x00) {
-		if(Wp != Rp) {
-			TxBuffer_1[0] = c_buf[Rp];
+		if(Wp_Rx != Rp_Rx) {
+			TxBuffer_1[0] = Rx_cbuf[Rp_Rx];
 			XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
-			Rp = (Rp + 1) % CBUF_SIZE;
+			Rp_Rx = (Rp_Rx + 1) % CBUF_SIZE;
 		}
-		xil_printf("Wp: %d, Rp: %d\r\n", Wp, Rp);
+		//xil_printf("Wp_Rx: %d, Rp_Rx: %d\r\n", Wp_Rx, Rp_Rx);
 	}
 
 	/* Transmit User FSM */
 
-	/* Buffer is full when Wp = Rp-1 mod CBUF_SIZE
-	 * but due to greater speed on the PC side we check
-	 * if the buffer is almost full and stop the transmission then.
-	 */
-	if(Wp == ((Rp-1) % CBUF_SIZE)) {
+	/* Buffer is full when Wp is equal to Rp-1 mod CBUF_SIZE */
+	if(Wp_Tx == ((Rp_Tx-1) % CBUF_SIZE)) {
 		*rts_1 = 0x01; //RTS OFF
 	}
 	else {

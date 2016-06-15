@@ -65,7 +65,7 @@ XUartLite UART_Inst_Ptr_2;            /* The instance of the UartLite Device */
 #define CBUF_SIZE							8
 #define Nc 									10
 
-extern int Wp, Rp;
-extern int c_buf[CBUF_SIZE];
+extern int Wp_Tx, Rp_Tx, Wp_Rx, Rp_Rx;
+extern int Tx_cbuf[CBUF_SIZE], Rx_cbuf[CBUF_SIZE];
 
 #endif /* UART_H_ */

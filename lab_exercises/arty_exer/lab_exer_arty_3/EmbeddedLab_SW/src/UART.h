@@ -68,4 +68,10 @@ XUartLite UART_Inst_Ptr_2;            /* The instance of the UartLite Device */
 extern int Wp_Tx, Rp_Tx, Wp_Rx, Rp_Rx;
 extern int Tx_cbuf[CBUF_SIZE], Rx_cbuf[CBUF_SIZE];
 
+/************************** XON/XOFF Constants *****************************/
+#define xon  	0x14
+#define xoff 	0x15
+#define del  	0x10
+#define xor_pat 0x20
+
 #endif /* UART_H_ */

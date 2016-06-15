@@ -80,11 +80,15 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	led_value ^= 1;
 	*LED = led_value;
 
-	/* Receive User FSM */
+	/*
+	 * Receive User FSM
+	 */
 	unsigned char *cts_1 = (unsigned char*) UART1_CTS_ADDR;
 	unsigned char *rts_1 = (unsigned char*) UART1_RTS_ADDR;
 
-	/* Cyclic buffer not empty */
+	unsigned char Tx_chan, Rx_chan, tmp;
+
+	/* Rx Cyclic buffer not empty */
 	if(*cts_1 == 0x00) {
 		if(Wp_Rx != Rp_Rx) {
 			TxBuffer_1[0] = Rx_cbuf[Rp_Rx];
@@ -94,7 +98,9 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 		//xil_printf("Wp_Rx: %d, Rp_Rx: %d\r\n", Wp_Rx, Rp_Rx);
 	}
 
-	/* Transmit User FSM */
+	/*
+	 * Transmit User FSM
+	 */
 
 	/* Buffer is full when Wp is equal to Rp-1 mod CBUF_SIZE */
 	if(Wp_Tx == ((Rp_Tx-1) % CBUF_SIZE)) {
@@ -103,4 +109,21 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	else {
 		*rts_1 = 0x00; //RTS ON
 	}
+
+	/*
+	 * Transmit Channel FSM
+	 */
+
+	/* Tx Cyclic Buffer not empty */
+	if(Wp_Tx != Rp_Tx) {
+		tmp = Tx_cbuf[Rp_Tx];
+		//XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
+		Rp_Tx = (Rp_Tx + 1) % CBUF_SIZE;
+	}
+
+	/* XON/XOFF Implementation */
+	if((tmp == del) || (tmp == xon) || (tmp == xoff)) {
+
+	}
+
 }

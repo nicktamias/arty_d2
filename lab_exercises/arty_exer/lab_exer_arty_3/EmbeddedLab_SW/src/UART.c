@@ -114,7 +114,7 @@ void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 
 	/* Transmit User FSM */
 
-	/* Transmit Cyclic Buffer not full */
+	/* Tx Cyclic Buffer not full */
 	if(Wp_Tx != ((Rp_Tx-1) % CBUF_SIZE)) {
 		num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_1, RxBuffer_1, BUF_SIZE);
 		if(UART_DBG) xil_printf("UART1: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_1);
@@ -123,7 +123,7 @@ void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 		cnt++;
 	}
 
-	/* Print Transmit Cyclic Buffer */
+	/* Print Tx Cyclic Buffer */
 
 	xil_printf("Tx_cbuf: ");
 
@@ -187,12 +187,40 @@ void SendHandler_UART_2(void *CallBackRef, unsigned int EventData)
 void RecvHandler_UART_2(void *CallBackRef, unsigned int EventData)
 {
 	unsigned int num_of_chars;
+	unsigned char tmp;
+	static int del_flag = 0;
 
-	num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_2, RxBuffer_2, BUF_SIZE);
+	//while(XUartLite_IsSending(&UART_Inst_Ptr_2));
+	//XUartLite_Send(&UART_Inst_Ptr_2, RxBuffer_2, num_of_chars);
 
-	while(XUartLite_IsSending(&UART_Inst_Ptr_2));
-	XUartLite_Send(&UART_Inst_Ptr_2, RxBuffer_2, num_of_chars);
-	if(UART_DBG) xil_printf("UART2: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_2);
+	/*
+	 * Receive Channel FSM
+	 */
+
+	/* Rx Cyclic Buffer not full */
+	if(Wp_Rx != ((Rp_Rx-1) % CBUF_SIZE)) {
+		num_of_chars = XUartLite_Recv(&UART_Inst_Ptr_2, RxBuffer_2, BUF_SIZE);
+
+		if(UART_DBG) xil_printf("UART2: Received %d bytes: %02X \r\n",num_of_chars,*RxBuffer_2);
+
+		tmp = *RxBuffer_2;
+
+		if(!del_flag) {
+			if(tmp == del) {
+				del_flag = 1;
+			}
+			else {
+				Rx_cbuf[Wp_Rx] = tmp;
+				Wp_Rx = (Wp_Rx + 1) % CBUF_SIZE;
+			}
+
+		}
+		else {
+			tmp ^= xor_pat;
+			Rx_cbuf[Wp_Rx] = tmp;
+			Wp_Rx = (Wp_Rx + 1) % CBUF_SIZE;
+		}
+	}
 
 
 }

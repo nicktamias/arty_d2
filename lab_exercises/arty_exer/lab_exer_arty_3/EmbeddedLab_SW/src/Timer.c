@@ -117,13 +117,17 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	/* Tx Cyclic Buffer not empty */
 	if(Wp_Tx != Rp_Tx) {
 		tmp = Tx_cbuf[Rp_Tx];
-		//XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
 		Rp_Tx = (Rp_Tx + 1) % CBUF_SIZE;
-	}
 
-	/* XON/XOFF Implementation */
-	if((tmp == del) || (tmp == xon) || (tmp == xoff)) {
+		/* XON/XOFF Implementation */
+		if((tmp == del) || (tmp == xon) || (tmp == xoff)) {
+			tmp ^= xor_pat;
+			TxBuffer_2[0] = del;
+			XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
+		}
 
+		TxBuffer_2[0] = tmp;
+		XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
 	}
 
 }

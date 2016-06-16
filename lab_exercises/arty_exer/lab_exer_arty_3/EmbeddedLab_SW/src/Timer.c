@@ -119,15 +119,22 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 		tmp = Tx_cbuf[Rp_Tx];
 		Rp_Tx = (Rp_Tx + 1) % CBUF_SIZE;
 
+		xil_printf("Initial char: %02X ", tmp);
+
 		/* XON/XOFF Implementation */
 		if((tmp == del) || (tmp == xon) || (tmp == xoff)) {
 			tmp ^= xor_pat;
 			TxBuffer_2[0] = del;
 			XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
+			while(XUartLite_IsSending(&UART_Inst_Ptr_2));
+			xil_printf(" !del! ");
 		}
+
+		xil_printf("Modified char: %02X\r\n", tmp);
 
 		TxBuffer_2[0] = tmp;
 		XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
+		while(XUartLite_IsSending(&UART_Inst_Ptr_2));
 	}
 
 }

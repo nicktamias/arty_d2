@@ -130,7 +130,7 @@ void RecvHandler_UART_1(void *CallBackRef, unsigned int EventData)
 	for(i=0; i<CBUF_SIZE; i++) {
 		xil_printf("%02X ", Tx_cbuf[i]);
 	}
-	xil_printf("\r\n");
+	xil_printf("(Wp_Tx: %d, Rp_Tx: %d)\r\n", Wp_Tx, Rp_Tx);
 
 	if(UART_DBG) xil_printf("cnt = %d\r\n", cnt);
 }
@@ -219,6 +219,7 @@ void RecvHandler_UART_2(void *CallBackRef, unsigned int EventData)
 			tmp ^= xor_pat;
 			Rx_cbuf[Wp_Rx] = tmp;
 			Wp_Rx = (Wp_Rx + 1) % CBUF_SIZE;
+			del_flag = 0;
 		}
 	}
 

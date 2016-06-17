@@ -13,6 +13,7 @@ int Wp_Rx = 1;
 int Rp_Rx = 1;
 int Tx_cbuf[CBUF_SIZE] = {0};
 int Rx_cbuf[CBUF_SIZE] = {0};
+int xon_xoff = 1;
 
 int UART_Init(XUartLite *UART_Inst_Ptr_1, u16 Uart_1_Dev_ID,  XUartLite *UART_Inst_Ptr_2, u16 Uart_2_Dev_ID)
 {
@@ -221,6 +222,13 @@ void RecvHandler_UART_2(void *CallBackRef, unsigned int EventData)
 			Wp_Rx = (Wp_Rx + 1) % CBUF_SIZE;
 			del_flag = 0;
 		}
+	}
+
+	if(Wp_Rx != ((Rp_Rx-1) % CBUF_SIZE)) {
+		xon_xoff = 1;
+	}
+	else {
+		xon_xoff = 0;
 	}
 
 

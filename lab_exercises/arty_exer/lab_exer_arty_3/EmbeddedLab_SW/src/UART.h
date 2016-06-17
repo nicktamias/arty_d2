@@ -73,5 +73,6 @@ extern int Tx_cbuf[CBUF_SIZE], Rx_cbuf[CBUF_SIZE];
 #define xoff 	0x15
 #define del  	0x10
 #define xor_pat 0x20
+extern int xon_xoff;
 
 #endif /* UART_H_ */

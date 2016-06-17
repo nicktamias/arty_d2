@@ -94,6 +94,8 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 			TxBuffer_1[0] = Rx_cbuf[Rp_Rx];
 			XUartLite_Send(&UART_Inst_Ptr_1, TxBuffer_1, 1);
 			Rp_Rx = (Rp_Rx + 1) % CBUF_SIZE;
+
+			if(!xon_xoff) xon_xoff = 1;
 		}
 		//xil_printf("Wp_Rx: %d, Rp_Rx: %d\r\n", Wp_Rx, Rp_Rx);
 	}
@@ -115,7 +117,7 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 	 */
 
 	/* Tx Cyclic Buffer not empty */
-	if(Wp_Tx != Rp_Tx) {
+	if((Wp_Tx != Rp_Tx) && (xon_xoff == 1)) {
 		tmp = Tx_cbuf[Rp_Tx];
 		Rp_Tx = (Rp_Tx + 1) % CBUF_SIZE;
 
@@ -126,7 +128,7 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 			tmp ^= xor_pat;
 			TxBuffer_2[0] = del;
 			XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
-			while(XUartLite_IsSending(&UART_Inst_Ptr_2));
+			//while(XUartLite_IsSending(&UART_Inst_Ptr_2));
 			xil_printf(" !del! ");
 		}
 
@@ -134,7 +136,7 @@ void TimerCounterHandler(void *CallBackRef, u8 TmrCtrNumber)
 
 		TxBuffer_2[0] = tmp;
 		XUartLite_Send(&UART_Inst_Ptr_2, TxBuffer_2, 1);
-		while(XUartLite_IsSending(&UART_Inst_Ptr_2));
+		//while(XUartLite_IsSending(&UART_Inst_Ptr_2));
 	}
 
 }
